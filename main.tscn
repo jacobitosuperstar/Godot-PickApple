@@ -1,0 +1,105 @@
+[gd_scene load_steps=5 format=3 uid="uid://cgbu2ljcfhanu"]
+
+[ext_resource type="PackedScene" uid="uid://c8m4kkxg1o6vg" path="res://trash_bag.tscn" id="1_5p72l"]
+[ext_resource type="PackedScene" uid="uid://bscr6hrei8g12" path="res://player.tscn" id="2_ks114"]
+
+[sub_resource type="GDScript" id="GDScript_ad6mp"]
+script/source = "extends Node
+
+@export var TraschBag_scene: PackedScene
+var score
+
+func game_over():
+	$ScoreTimer.stop()
+	$TrashBagTimer.stop()
+
+func new_game():
+	score = 0
+	$Player.start($StartPosition.position)
+	$StartTimer.start()
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	new_game()
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+
+func _on_player_hit() -> void:
+	pass # Replace with function body.
+
+
+func _on_score_timer_timeout() -> void:
+	score += 1
+
+func _on_start_timer_timeout():
+	$TrashBagTimer.start()
+	$ScoreTimer.start()
+
+
+func _on_trash_bag_timer_timeout() -> void:
+	# Create a new instance of the Mob scene.
+	var trashbag = TraschBag_scene.instantiate()
+
+	# Choose a random location on Path2D.
+	var trashbag_spawn_location = $TrashBagPath/TrashBagSpawnLocation
+	trashbag_spawn_location.progress_ratio = randf()
+
+	# Set the mob's direction perpendicular to the path direction.
+	var direction = trashbag_spawn_location.rotation + PI / 2
+
+	# Set the mob's position to a random location.
+	trashbag.position = trashbag_spawn_location.position
+
+	# Add some randomness to the direction.
+	direction += randf_range(-PI / 4, PI / 4)
+	trashbag.rotation = direction
+
+	# Choose the velocity for the mob.
+	var velocity = Vector2(randf_range(150.0, 250.0), 0.0)
+	trashbag.linear_velocity = velocity.rotated(direction)
+
+	# Spawn the mob by adding it to the Main scene.
+	add_child(trashbag)
+"
+
+[sub_resource type="Curve2D" id="Curve2D_aum57"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 424, 0, 0, 0, 0, 0, 424, 424, 0, 0, 0, 0, 0, 424, 0, 0, 0, 0, 0, 0)
+}
+point_count = 5
+
+[node name="Main" type="Node"]
+script = SubResource("GDScript_ad6mp")
+TraschBag_scene = ExtResource("1_5p72l")
+
+[node name="Player" parent="." instance=ExtResource("2_ks114")]
+
+[node name="TrashBagTimer" type="Timer" parent="."]
+
+[node name="AppleTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="StartPosition" type="Marker2D" parent="."]
+position = Vector2(210, 210)
+
+[node name="TrashBagPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_aum57")
+
+[node name="TrashBagSpawnLocation" type="PathFollow2D" parent="TrashBagPath"]
+
+[node name="ApplePath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_aum57")
+
+[connection signal="hit" from="Player" to="." method="_on_player_hit"]
+[connection signal="timeout" from="TrashBagTimer" to="." method="_on_trash_bag_timer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]

@@ -1,0 +1,54 @@
+[gd_scene load_steps=7 format=3 uid="uid://q0fck46i6u78"]
+
+[ext_resource type="Texture2D" uid="uid://birdxvqiq653q" path="res://assts/Player/player.png" id="1_c8utu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jvyvp"]
+atlas = ExtResource("1_c8utu")
+region = Rect2(112, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_48e2i"]
+atlas = ExtResource("1_c8utu")
+region = Rect2(128, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_apgi1"]
+atlas = ExtResource("1_c8utu")
+region = Rect2(144, 48, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5albd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jvyvp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_48e2i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_apgi1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_48e2i")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yh71n"]
+radius = 24.0
+height = 48.0
+
+[node name="Apple" type="RigidBody2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_5albd")
+frame = 1
+frame_progress = 0.645406
+speed_scale = 2.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 7)
+shape = SubResource("CapsuleShape2D_yh71n")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]

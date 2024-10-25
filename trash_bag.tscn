@@ -1,0 +1,58 @@
+[gd_scene load_steps=8 format=3 uid="uid://c8m4kkxg1o6vg"]
+
+[ext_resource type="Script" path="res://trash_bag.gd" id="1_rudjy"]
+[ext_resource type="Texture2D" uid="uid://birdxvqiq653q" path="res://assts/Player/player.png" id="2_8kisi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bng4d"]
+atlas = ExtResource("2_8kisi")
+region = Rect2(112, 64, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ubmkd"]
+atlas = ExtResource("2_8kisi")
+region = Rect2(128, 64, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mh1rv"]
+atlas = ExtResource("2_8kisi")
+region = Rect2(144, 64, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_858mt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bng4d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ubmkd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mh1rv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ubmkd")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_r37of"]
+radius = 11.3061
+height = 67.8367
+
+[node name="TrashBag" type="RigidBody2D"]
+script = ExtResource("1_rudjy")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 2.27374e-13)
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_858mt")
+animation = &"idle"
+frame = 3
+frame_progress = 0.95117
+speed_scale = 2.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 0.82205
+shape = SubResource("CapsuleShape2D_r37of")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
